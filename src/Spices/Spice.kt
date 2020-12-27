@@ -40,10 +40,13 @@ fun matchSeak(seal: Seal): String {
 enum class Color(val rgb: Int) {
     RED(0xFF0000),
     GREEN(0x00FF00),
-    BLUE(0x0000FF)
+    BLUE(0x0000FF),
+    YELLOW(0xFFFF00)
 }
 
-abstract class Spice(val name: String, val heat: Int, val spiciness: String, color: SpiceColor): SpiceColor by color {
+//Making Spice a sealed class helps keep all the spices together in one file.
+// changed from abstract to sealed
+sealed class Spice(val name: String, val heat: Int, val spiciness: String, color: SpiceColor): SpiceColor by color {
     abstract fun prepareSpice()
 }
 
@@ -58,15 +61,15 @@ object Salt: Spice("salt", 1, "mild", WhiteSpiceColor) {
 }
 
 object YellowSpiceColor: SpiceColor {
-    override val color = "yellow"
+    override val color = Color.YELLOW
 }
 
 object WhiteSpiceColor: SpiceColor {
-    override val color = "white"
+    override val color = Color.GREEN
 }
 
 interface SpiceColor {
-    val color: String
+    val color: Color
 }
 
 class Curry(name: String, heat: Int, spiciness: String = "spicy", color: SpiceColor = YellowSpiceColor): Spice(name, heat, spiciness,color), Grinder,
