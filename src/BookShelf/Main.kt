@@ -4,13 +4,22 @@ import kotlin.math.sign
 
 fun main(args: Array<String>) {
 
-    val book = Book("New","Nick",2020)
+    val book = Book("New","Nick",2020, 200)
 
     val bookTitleAuthor = book.getTitleAuthor()
     val bookTitleAuthorYear = book.getTitleAuthorYear()
     println("here is your book ${bookTitleAuthorYear.first} written by ${bookTitleAuthorYear.second} in ${bookTitleAuthorYear.third}")
 
+    println("book weight: ${book.getWeight()} bool pages: ${book.pages}")
     book.printUrl()
+
+    val puppy = Puppy()
+
+    while (book.pages != 0) {
+        puppy.playWithBook(book)
+        println("book pages: ${book.pages}")
+    }
+
 
     val allBooks: Set<String> = setOf("Macbeth", "Romeo and Juliet", "Hamlet", "A Midsummer Night's Dream")
 

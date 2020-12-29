@@ -1,10 +1,11 @@
 package BookShelf
 
 import Collections.Constants
+import java.util.*
 
 const val MAX_BOOKS_PER_PERSON = 5
 
-open class Book(val title: String, val author: String, val year: Int) {
+open class Book(val title: String, val author: String, val year: Int, var pages: Int) {
     private var currentPage: Int = 0
 
     companion object Constants2 {
@@ -32,12 +33,22 @@ open class Book(val title: String, val author: String, val year: Int) {
     }
 }
 
-class eBook(title: String, author: String, year: Int,var format: String = "text"): Book(title,author,year) {
+class eBook(title: String, author: String, year: Int, pages: Int,var format: String = "text"): Book(title,author,year,pages) {
 
     private var wordsRead = 0
 
     override fun readPage() {
         wordsRead =  wordsRead + 250
+    }
+}
+
+fun Book.getWeight(): Double { return pages*1.5}
+
+fun Book.tornPages(torn: Int) = if (pages >= torn) pages -= torn else pages = 0
+
+class Puppy {
+    fun playWithBook(book: Book) {
+        book.tornPages(Random().nextInt(book.pages) + 1)
     }
 }
 
