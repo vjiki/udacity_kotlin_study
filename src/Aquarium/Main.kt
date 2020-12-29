@@ -1,6 +1,9 @@
 package Aquarium
 
+import Aquarium.generics.genericExample
+
 fun main (args: Array<String>) {
+    genericExample()
     buildAquarium()
     makeFish()
 }
