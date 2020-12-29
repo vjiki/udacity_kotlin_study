@@ -35,9 +35,9 @@ class LakeWater : WaterSupply (needsProcessed = true) {
 
 // replace any with top level type class in hierarchy
 // here T must be a water supply.
-class Aquarium<T: WaterSupply>(val waterSupply: T) {
+class Aquarium<out T: WaterSupply>(val waterSupply: T) {
 
-    fun addWater() {
+    fun addWater(cleaner: Cleaner<T>) {
         //check is a standard library function in Kotlin
         // that's convenient for checking the state of your class
         // it acts as an assertion and it will throw an
@@ -50,19 +50,40 @@ class Aquarium<T: WaterSupply>(val waterSupply: T) {
         // You don't need parenthesis because the dot
         // has precedence over the exclamation mark.
         // this will give as exception if water not processed
-        check(!waterSupply.needsProcessed) { "water supply needs processed" }
-
+        if(waterSupply.needsProcessed) {
+            cleaner.clean(waterSupply)
+        }
         println("adding water from $waterSupply")
     }
 }
+
+
+// Constructors can take out types as arguments
+// but functions never can.
+interface Cleaner<in T: WaterSupply> {
+    fun clean(waterSupply: T)
+}
+
+class TapWaterCleaner: Cleaner<TapWater> {
+    override fun clean(waterSupply: TapWater) {
+        waterSupply.addChemicalCleaners()
+    }
+}
+
+fun addItemTo(aquarium: Aquarium<WaterSupply>) = println("item added")
 
 fun genericExample() {
 
     // create new aquarium and pass tapWater to it
     // we can pass TapWater instance as the value for the
     // WaterSupply parameter.
+
+    val cleaner = TapWaterCleaner()
     val aquarium = Aquarium(TapWater())
-    aquarium.waterSupply.addChemicalCleaners()
+    aquarium.addWater(cleaner)
+    addItemTo(aquarium)
+
+    //aquarium.waterSupply.addChemicalCleaners()
 
     //val aquarium2 = Aquarium("string")
     //println(aquarium2.waterSupply)
@@ -74,5 +95,16 @@ fun genericExample() {
     // we need to filter the water to not get exception
     // that water is processed
     aquarium4.waterSupply.filter()
-    aquarium4.addWater()
+    //aquarium4.addWater()
 }
+
+// out type can be used as return values
+// in types can be used as parameters
+// The IDE will suggest you add out or in
+// to your generic types when it's correct to do so.
+
+
+// out type are type parameters that only
+// ever occur in return values of functions or on Val properties
+// if we try to pass an out type as a parameter we will
+// get a compilation error
